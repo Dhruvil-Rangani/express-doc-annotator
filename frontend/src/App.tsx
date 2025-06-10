@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { LayoutDashboard, Upload, FileText, Settings } from "lucide-react";
+import { FileUpload } from "@/components/FileUpload";
 
 function App() {
   return (
@@ -15,7 +16,7 @@ function App() {
           <h1 className="ml-2 text-xl font-bold">EvenUp</h1>
         </div>
 
-        <nav className="flex-1 space-y-2 p-4">
+        <nav className="flex-1 space-y-4 p-4">
           {/* We are using the Button component we built, but with different styles! */}
           <Button variant="secondary" className="w-full justify-start">
             <LayoutDashboard className="mr-2 h-4 w-4" />
@@ -48,11 +49,9 @@ function App() {
           </div>
         </header>
 
-        {/* Content Area Placeholder */}
+        {/* File Upload Area */}
         <div className="mt-8">
-          <div className="flex h-96 items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-white">
-            <p className="text-gray-400">Your content will go here.</p>
-          </div>
+          <FileUpload />
         </div>
 
       </main>
