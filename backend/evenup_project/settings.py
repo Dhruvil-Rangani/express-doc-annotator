@@ -18,7 +18,10 @@ SECRET_KEY = 'django-insecure-1f$ep!vz_&d3r%%!(!%#2o$0!pz5nbz914+!(^=(ynjb_=_hwd
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "express-doc-annotator.onrender.com",
+    "express-demand.dhruvilrangani.com"
+]
 
 
 # Application definition
