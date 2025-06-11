@@ -17,10 +17,18 @@ function App() {
   // Add state to hold the array of files
   const [files, setFiles] = useState<UploadableFile[]>([]);
 
+  // Function to remove a file from the state
+  const onRemoveFile = (fileId: string) => {
+    setFiles(prevFiles => prevFiles.filter(f => f.id !== fileId));
+  };
+
+  // Derived state to check if all uploads are complete
+  const isUploadComplete = files.length > 0 && files.every(f => f.progress === 100);
+
   // This function simulates an upload over 2 seconds
   const simulateUpload = (file: UploadableFile) => {
     const interval = setInterval(() => {
-      setFiles(prevFiles => 
+      setFiles(prevFiles =>
         prevFiles.map(f => {
           if (f.id === file.id) {
             //Increment progress by a bit
@@ -40,7 +48,7 @@ function App() {
   // This function will be passed to the FileUpload component
   const handleFilesSelected = (selectedFiles: File[]) => {
     // Create new UploadableFile objects for each selected file
-    const newUploads: UploadableFile[] = selectedFiles.map( file => ({
+    const newUploads: UploadableFile[] = selectedFiles.map(file => ({
       id: `${file.name}-${Date.now()}`, // Unique ID based on file name and current timestamp
       file: file,
       progress: 0, // Initial progress is 0%
@@ -100,17 +108,20 @@ function App() {
 
         {/* File Upload Area */}
         <div className="mt-8">
-          <FileUpload onFilesSelected={handleFilesSelected}/>
+          <FileUpload onFilesSelected={handleFilesSelected} />
         </div>
 
         {/* Conditionally render the file list only if there are files */}
         {files.length > 0 && (
-          <FileProgressList files={files} />
+          <FileProgressList
+            files={files}
+            onRemoveFile={onRemoveFile}
+            isUploadComplete={isUploadComplete}
+          />
         )}
-
       </main>
     </div>
-  )
+  );
 }
 
 export default App
