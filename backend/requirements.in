@@ -1,0 +1,2 @@
+dj_database_url==3.0.0
+djangorestframework==3.16.0
