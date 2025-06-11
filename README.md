@@ -129,4 +129,4 @@ npm run dev
 
 * **Portfolio:** [dhruvilrangani.com](https://dhruvilrangani.com)
 * **GitHub:** [@Dhruvil-Rangani](https://github.com/Dhruvil-Rangani)
-* **LinkedIn:** `[Linkedin](https://linkedin.com/in/dhruvilrangani007`
+* **LinkedIn:** [Linkedin](https://linkedin.com/in/dhruvilrangani007)
