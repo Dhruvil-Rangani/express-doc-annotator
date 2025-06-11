@@ -1,16 +1,26 @@
 // src/components/FileUpload.tsx
 
 import { useCallback } from 'react';
-import { useDropzone } from 'react-dropzone';
+import { useDropzone, type FileRejection } from 'react-dropzone';
 import { UploadCloud } from 'lucide-react';
 
-export function FileUpload() {
+// Define the props that this component will accept
+interface FileUploadProps {
+    onFilesSelected: (files: File[]) => void;
+}
+
+export function FileUpload({ onFilesSelected }: FileUploadProps) {
     // Callback function to handle file drop
-    const onDrop = useCallback((acceptedFiles: File[]) => {
-        // For now, we'll just log the accepted files
-        // In a future, we can handle the file upload logic here
-        console.log('Accepted files:', acceptedFiles);
-    }, []);
+    const onDrop = useCallback((acceptedFiles: File[], fileRejections: FileRejection[]) => {
+        // Pass the accepted files up to the parent component
+        if(acceptedFiles?.length) {
+            onFilesSelected(acceptedFiles);
+        }
+        // You can handle file rejections here
+        if (fileRejections?.length > 0) {
+            console.error('File(s) rejected: ', fileRejections);
+        }
+    }, [onFilesSelected]);
 
     // useDropzone hook provided props and state for the dropzone
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
