@@ -2,9 +2,10 @@
 
 import { FileText } from 'lucide-react';
 import { Progress } from "@/components/ui/progress"; // Import the progress bar
+import type { UploadableFile } from "@/App";
 
 interface FileProgressListProps {
-    files: File[];
+    files: UploadableFile[];
 }
 
 // A small utility function to format bytes into a more readable format
@@ -20,19 +21,19 @@ function formatBytes(bytes: number, decimals = 2): string {
 export function FileProgressList({ files }: FileProgressListProps) {
     return (
         <div className="mt-8 space-y-4">
-            <h3 className="text-xl font-semibold">Selected Files</h3>
+            <h3 className="text-xl font-semibold">Uploading Files</h3>
             <ul className="space-y-3">
-                {files.map((file, index) => (
-                    <li key={index} className="rounded-lg border border-gray-200 bg-white p-4">
+                {files.map((uploadableFile) => (
+                    <li key={uploadableFile.id} className="rounded-lg border border-gray-200 bg-white p-4">
                         <div className="flex items-center space-x-4">
                             <FileText className="h-8 w-8 text-gray-500" />
                             <div className="flex-1">
-                                <p className="font-medium text-gray-800">{file.name}</p>
-                                <p className="text-sm text-gray-500">{formatBytes(file.size)}</p>
+                                <p className="font-medium text-gray-800">{uploadableFile.file.name}</p>
+                                <p className="text-sm text-gray-500">{formatBytes(uploadableFile.file.size)}</p>
                             </div>
                         </div>
-                        {/* We will make this progress bar dynamic in the next step! */}
-                        <Progress value={33} className="mt-2 h-2" />
+                        {/* The progress value is now dynamic!The progress value is now dynamic! */}
+                        <Progress value={uploadableFile.progress} className="mt-2 h-2" />
                     </li>
                 ))}
             </ul>

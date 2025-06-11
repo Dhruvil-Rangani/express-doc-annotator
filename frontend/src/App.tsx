@@ -6,14 +6,51 @@ import { LayoutDashboard, Upload, FileText, Settings } from "lucide-react";
 import { FileUpload } from "@/components/FileUpload";
 import { FileProgressList } from "@/components/FileProgressList";
 
+// Define the new, more detailed state structure for each file
+export interface UploadableFile {
+  id: string;
+  file: File;
+  progress: number;
+}
+
 function App() {
   // Add state to hold the array of files
-  const [files, setFiles] = useState<File[]>([]);
+  const [files, setFiles] = useState<UploadableFile[]>([]);
+
+  // This function simulates an upload over 2 seconds
+  const simulateUpload = (file: UploadableFile) => {
+    const interval = setInterval(() => {
+      setFiles(prevFiles => 
+        prevFiles.map(f => {
+          if (f.id === file.id) {
+            //Increment progress by a bit
+            const newProgress = f.progress + 10;
+            if (newProgress >= 100) {
+              clearInterval(interval); // Stop the interval when progress reaches 100%
+              return { ...f, progress: 100 };
+            }
+            return { ...f, progress: newProgress };
+          }
+          return f;
+        })
+      );
+    }, 200);
+  };
 
   // This function will be passed to the FileUpload component
   const handleFilesSelected = (selectedFiles: File[]) => {
+    // Create new UploadableFile objects for each selected file
+    const newUploads: UploadableFile[] = selectedFiles.map( file => ({
+      id: `${file.name}-${Date.now()}`, // Unique ID based on file name and current timestamp
+      file: file,
+      progress: 0, // Initial progress is 0%
+    }));
+
     // Append the new files to the existing array
-    setFiles(prevFiles => [...prevFiles, ...selectedFiles]);
+    setFiles(prevFiles => [...prevFiles, ...newUploads]);
+
+    //Start the simulation for each new file
+    newUploads.forEach(simulateUpload);
   };
 
 
