@@ -20,7 +20,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     "express-doc-annotator.onrender.com",
-    "express-demand.dhruvilrangani.com"
+    "express-demand.dhruvilrangani.com",
 ]
 
 
