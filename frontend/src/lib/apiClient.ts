@@ -1,9 +1,6 @@
 import axios from "axios";
 
-const isLocalhost = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
-const baseURL = isLocalhost
-  ? import.meta.env.VITE_BACKEND_DEV
-  : import.meta.env.VITE_BACKEND_URL;
+const baseURL ='/api';
 
 const apiClient = axios.create({
     baseURL,

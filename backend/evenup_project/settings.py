@@ -22,7 +22,8 @@ ALLOWED_HOSTS = [
     "express-doc-annotator.onrender.com",
     "express-demand.dhruvilrangani.com",
     'localhost', 
-    '127.0.0.1'
+    '127.0.0.1',
+    'backend'
 ]
 
 

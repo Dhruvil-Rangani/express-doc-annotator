@@ -1,5 +1,5 @@
 // src/App.tsx
-import { Routes, Route, Outlet, Link } from 'react-router-dom';
+import { Routes, Route, Outlet, NavLink } from 'react-router-dom'; // 1. Import NavLink instead of Link
 import { Button } from "@/components/ui/button";
 import { LayoutDashboard, FileText, Settings } from "lucide-react";
 import { DashboardPage } from './pages/DashboardPage';
@@ -15,11 +15,17 @@ function AppLayout() {
           <h1 className="ml-2 text-xl font-bold">EvenUp</h1>
         </div>
         <nav className="flex-1 space-y-2 p-4">
-          {/* Use `asChild` prop to merge Link functionality with Button styling */}
-          <Button asChild variant="secondary" className="w-full justify-start">
-            <Link to="/"><LayoutDashboard className="mr-2 h-4 w-4" />Dashboard</Link>
-          </Button>
-          {/* We can disable buttons for pages that don't exist yet */}
+          {/* 2. Use NavLink to dynamically set styles */}
+          <NavLink to="/" end>
+            {({ isActive }) => (
+              <Button
+                variant={isActive ? "secondary" : "ghost"}
+                className="w-full justify-start"
+              >
+                <LayoutDashboard className="mr-2 h-4 w-4" />Dashboard
+              </Button>
+            )}
+          </NavLink>
           <Button variant="ghost" className="w-full justify-start" disabled>
             <Settings className="mr-2 h-4 w-4" />Settings
           </Button>

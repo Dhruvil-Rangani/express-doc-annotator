@@ -1,0 +1,34 @@
+services:
+  # A PostgreSQL database service
+  - type: psql
+    name: evenup-db-prod
+    plan: free # Important: use the free tier
+    pomo: true # Automatically use the latest major version
+    ipAllowList: [] # Allow connections from anywhere
+
+  # The Django backend web service
+  - type: web
+    name: evenup-backend-prod
+    plan: free # Important: use the free tier
+    runtime: python
+    # Build command tells Render how to install dependencies
+    buildCommand: "pip install -r requirements.txt"
+    # Start command tells Render how to run the production server
+    startCommand: "gunicorn evenup_project.wsgi:application"
+    # The service runs in the 'backend' directory
+    rootDir: ./backend
+    envVars:
+      # This connects our app to the database created above
+      - key: DATABASE_URL
+        fromService:
+          type: psql
+          name: evenup-db-prod
+          property: connectionString
+      # We need to set these for Django
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: DJANGO_SETTINGS_MODULE
+        value: evenup_project.settings
+      # You will need to add your OpenAI key as a secret in the Render dashboard
+      - key: OPENAI_API_KEY
+        sync: false
