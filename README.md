@@ -1,15 +1,11 @@
 # Express Doc Annotator
 
 <p align="center">
-  <img src="[LINK_TO_A_GIF_OF_YOUR_APP_IN_ACTION]" alt="Express Doc Annotator Demo" width="800"/>
-</p>
-
-<p align="center">
   A full-stack web application designed to simulate a document processing pipeline, built with a modern tech stack mirroring the engineering environment at EvenUp. The application allows users to upload documents, tracks the processing status in real-time via API polling, and displays the final state, demonstrating a complete asynchronous workflow from frontend to backend.
 </p>
 
 <p align-center>
-  <a href="[LINK_TO_YOUR_DEPLOYED_APP]">
+  <a href="https://express-demand.dhruvilrangani.com">
     <img src="https://img.shields.io/badge/Live-Demo-brightgreen?style=for-the-badge&logo=vercel" alt="Live Demo"/>
   </a>
 </p>
