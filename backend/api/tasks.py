@@ -1,26 +1,82 @@
 # api/tasks.py
 import time
 from .models import DocumentJob
+import os
+import openai
+import pypdf
+import docx
+from .models import DocumentJob
+
+# --- Helper function to extract text from documents ---
+def extract_text_from_document(file_path):
+    """Extracts text from pdf, docx, or txt files."""
+    print(f"Extracting text from: {file_path}")
+    if file_path.endswith('.pdf'):
+        with open(file_path, 'rb') as f:
+            reader = pypdf.PdfReader(f)
+            text = "".join(page.extract_text() for page in reader.pages)
+        return text
+    elif file_path.endswith('.docx'):
+        doc = docx.Document(file_path)
+        text = "\n".join(para.text for para in doc.paragraphs)
+        return text
+    elif file_path.endswith('.txt'):
+        with open(file_path, 'r') as f:
+            text = f.read()
+        return text
+    else:
+        print(f"Unsupported file type for text extraction: {file_path}")
+        return None
 
 def process_document_job(job_id):
-    print(f"Starting processing for job {job_id}...")
+    print(f"Starting AI processing for job {job_id}...")
     try:
         # Get the job from the database
         job = DocumentJob.objects.get(pk=job_id)
-
+        
+        # Check if a document was actually uploaded
+        if not job.document:
+            raise ValueError("No document found for this job.")
+        
         # Update status to PROCESSING
         job.status = DocumentJob.Status.PROCESSING
         job.save()
         print(f"Job {job_id} status updated to PROCESSING.")
-
-        # Simulate work (e.g., calling an LLM, analyzing a doc)
-        time.sleep(5)
-
-        # Update status to SUCCESS and add a result
+        
+        # 1. Extract text from the saved file
+        full_file_path = job.document.path
+        extracted_text = extract_text_from_document(full_file_path)
+        
+        if not extracted_text:
+            raise ValueError("Could not extract text from the document.")
+        
+        # 2. Call OpenAI API for summary
+        print(f"Sending request to OpenAI for job {job_id}...")
+        client = openai.OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
+        
+        try:
+            response = client.chat.completions.create(
+                model="o4-mini",
+                messages= [
+                    {"role": "system", "content": "You are a helpful assistant that provides thorough yet concise summaries of documents."},
+                    {"role": "user", "content": (
+                        "Please provide a detailed summary of the following document, "
+                        "about 200-250 words (roughly half a page). "
+                        "Focus on the main ideas and key points, and write in clear, well-structured paragraphs.\n\n"
+                        f"{extracted_text[:4000]}"
+                    )}
+                ]
+            )
+            summary = response.choices[0].message.content
+        except Exception as api_error:
+            print(f"OpenAI API error for job {job_id}: {api_error}")
+            raise
+        
+        # 3. Save the result and update status
+        job.result = summary
         job.status = DocumentJob.Status.SUCCESS
-        job.result = f"This is the successfully processed summary for job {job_id}."
         job.save()
-        print(f"Job {job_id} has been successfully processed.")
+        print(f"Job {job_id} has been successfully processed and summary saved.")
 
     except DocumentJob.DoesNotExist:
         print(f"Job {job_id} not found.")
@@ -28,8 +84,9 @@ def process_document_job(job_id):
         print(f"An error occurred for job {job_id}: {e}")
         # Optionally, update the job status to FAILED
         try:
-            job = DocumentJob.objects.get(pk=job_id)
-            job.status = DocumentJob.Status.FAILED
-            job.save()
+            job_to_fail = DocumentJob.objects.get(pk=job_id)
+            job_to_fail.status = DocumentJob.Status.FAILED
+            job_to_fail.result = f"An error occurred during processing: {str(e)}"
+            job_to_fail.save()
         except DocumentJob.DoesNotExist:
             pass # Job was deleted or never existed

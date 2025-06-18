@@ -21,6 +21,8 @@ DEBUG = True
 ALLOWED_HOSTS = [
     "express-doc-annotator.onrender.com",
     "express-demand.dhruvilrangani.com",
+    'localhost', 
+    '127.0.0.1'
 ]
 
 
@@ -133,3 +135,6 @@ CORS_ALLOWED_ORIGINS = [
     'https://express-doc-annotator.vercel.app',
     'https://express-demand.dhruvilrangani.com'
 ]
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

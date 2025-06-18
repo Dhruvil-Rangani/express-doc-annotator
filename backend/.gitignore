@@ -5,3 +5,7 @@ __pycache__/
 *.pyo
 *.pyd
 db.sqlite3
+
+# User Uploads
+# This is the important line: tells Git to ignore the media folder
+media/

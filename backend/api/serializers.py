@@ -8,5 +8,5 @@ class DocumentJobSerializer(serializers.ModelSerializer):
         model = DocumentJob
         # We specify the fields we want to include in the API representation.
         # 'read_only_fields' are fields that are set by the server, not the client.
-        fields = ['id', 'status', 'result', 'created_at', 'updated_at']
-        read_only_fields = ['id', 'result', 'created_at', 'updated_at']
+        fields = ['id', 'status', 'document', 'result', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'status', 'result', 'created_at', 'updated_at']
