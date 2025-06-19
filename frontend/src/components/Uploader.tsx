@@ -1,5 +1,5 @@
 // src/components/Uploader.tsx
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, useRef} from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { FileUpload } from './FileUpload';
 import { useToast } from '../hooks/use-toast';
@@ -11,6 +11,7 @@ import { CheckCircle2, FileText, AlertTriangle } from 'lucide-react';
 // A component to display the progress of a single new upload
 function UploadProgressItem({ file, onComplete }: { file: File, onComplete: () => void }) {
     const { toast } = useToast();
+    const hasFiredRef = useRef(false);
     const { mutate, isPending, isSuccess, isError } = useMutation({
         mutationFn: () => createJob(file),
         onSuccess: () => {
@@ -26,10 +27,14 @@ function UploadProgressItem({ file, onComplete }: { file: File, onComplete: () =
         }
     });
 
-    // Start upload immediately when the component mounts
-    useState(() => {
-        mutate();
-    });
+    // 3. THE FIX: Use useEffect to safely handle the side effect (API call)
+    useEffect(() => {
+        // This check ensures the mutation only fires once, even in StrictMode
+        if (!hasFiredRef.current) {
+            mutate();
+            hasFiredRef.current = true;
+        }
+    }, [mutate]);
 
     return (
         <li className="rounded-lg border bg-white p-4">

@@ -30,7 +30,7 @@ export function DashboardPage() {
                     <DialogTrigger asChild>
                         <Button size="lg"><Upload className="mr-2 h-4 w-4" />Upload Document</Button>
                     </DialogTrigger>
-                    <DialogContent className="sm:max-w-[425px]">
+                    <DialogContent className="sm:max-w-xl max-h-[80vh] overflow-y-auto">
                         <DialogHeader>
                             <DialogTitle>Upload New Documents</DialogTitle>
                         </DialogHeader>
