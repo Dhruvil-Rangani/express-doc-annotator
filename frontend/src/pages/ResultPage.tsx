@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { getJob } from '@/lib/api';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Loader2 } from 'lucide-react';
+import { ChatInterface } from '@/components/ChatInterface';
 
 export function ResultPage() {
     // 1. Get the job ID from the URL parameters
@@ -39,6 +40,8 @@ export function ResultPage() {
                 <h2 className="text-lg font-semibold mb-2">AI Generated Summary:</h2>
                 <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">{job.result || 'No summary available.'}</p>
             </div>
+
+            <ChatInterface jobId={job.id} />
         </div>
     )
 }

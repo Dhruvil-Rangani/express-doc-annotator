@@ -3,30 +3,8 @@ import time
 from .models import DocumentJob
 import os
 import openai
-import pypdf
-import docx
 from .models import DocumentJob
-
-# --- Helper function to extract text from documents ---
-def extract_text_from_document(file_path):
-    """Extracts text from pdf, docx, or txt files."""
-    print(f"Extracting text from: {file_path}")
-    if file_path.endswith('.pdf'):
-        with open(file_path, 'rb') as f:
-            reader = pypdf.PdfReader(f)
-            text = "".join(page.extract_text() for page in reader.pages)
-        return text
-    elif file_path.endswith('.docx'):
-        doc = docx.Document(file_path)
-        text = "\n".join(para.text for para in doc.paragraphs)
-        return text
-    elif file_path.endswith('.txt'):
-        with open(file_path, 'r') as f:
-            text = f.read()
-        return text
-    else:
-        print(f"Unsupported file type for text extraction: {file_path}")
-        return None
+from .utils import extract_text_from_file
 
 def process_document_job(job_id):
     print(f"Starting AI processing for job {job_id}...")
@@ -45,7 +23,7 @@ def process_document_job(job_id):
         
         # 1. Extract text from the saved file
         full_file_path = job.document.path
-        extracted_text = extract_text_from_document(full_file_path)
+        extracted_text = extract_text_from_file(full_file_path)
         
         if not extracted_text:
             raise ValueError("Could not extract text from the document.")
